@@ -570,7 +570,7 @@ namespace theta
      * Shows a rainbow pattern on all LEDs.
      * @param dir direction. Up is Red at 0 to Purple at 13
      */
-    //% blockId="LedRainbow" block="set LED rainbow"
+    //% blockId="LedRainbow" block="set LED rainbow%dir"
     //% weight=70
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
@@ -587,7 +587,7 @@ namespace theta
      * Shift LEDs and clear with zeros.
      * @param dir direction of shift. Up is 0 to 1
      */
-    //% blockId="LedShift" block="shift LEDs"
+    //% blockId="LedShift" block="shift LEDs%dir"
     //% weight=60
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
@@ -604,7 +604,7 @@ namespace theta
      * Rotate LEDs
      * @param dir direction of rotation. Up is 0 to 1
      */
-    //% blockId="LedRotate" block="rotate LEDs"
+    //% blockId="LedRotate" block="rotate LEDs%dir"
     //% weight=50
     //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
