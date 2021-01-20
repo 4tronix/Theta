@@ -579,7 +579,7 @@ namespace theta
     export function ledRainbow(dir: boolean): void
     {
         i2cData2[0] = RAINBOW;		// Select Rainbow
-        i2cData2[1] = dir;		// Direction
+        i2cData2[1] = dir?1:0;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
@@ -596,7 +596,7 @@ namespace theta
     export function ledShift(dir: boolean): void
     {
         i2cData2[0] = SHIFT_LEDS;	// Select Shift
-        i2cData2[1] = dir;		// Direction
+        i2cData2[1] = dir?1:0;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
@@ -613,7 +613,7 @@ namespace theta
     export function ledRotate(dir: boolean): void
     {
         i2cData2[0] = ROTATE_LEDS;	// Select Rotate
-        i2cData2[1] = dir;		// Direction
+        i2cData2[1] = dir?1:0;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
