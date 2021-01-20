@@ -561,13 +561,16 @@ namespace theta
     /**
       * Shows a rainbow pattern on all LEDs.
       */
-    //% blockId="LedRainbow" block="set LED rainbow"
+    //% blockId="LedRainbow" block="set 01 LED rainbow"
     //% weight=70
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
     export function ledRainbow(): void
     {
+        i2cData2[0] = RAINBOW;		// Select Rainbow
+        i2cData2[1] = 0;		// Direction
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
@@ -580,6 +583,9 @@ namespace theta
     //% blockGap=8
     export function ledShift(): void
     {
+        i2cData2[0] = SHIFT_LEDS;	// Select Shift
+        i2cData2[1] = 0;		// Direction
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
@@ -592,6 +598,9 @@ namespace theta
     //% blockGap=8
     export function ledRotate(): void
     {
+        i2cData2[0] = ROTATE_LEDS;	// Select Rotate
+        i2cData2[1] = 0;		// Direction
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     // Advanced blocks
@@ -625,6 +634,9 @@ namespace theta
     export function setUpdateMode(updateMode: RXMode): void
     {
         _updateMode = updateMode;
+        i2cData2[0] = UPDATEMODE;	// Register for Update Mode command
+        i2cData2[1] = updateMode;	// Update Mode 0 or 1
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
