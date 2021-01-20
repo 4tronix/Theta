@@ -567,47 +567,53 @@ namespace theta
     }
 
     /**
-      * Shows a rainbow pattern on all LEDs.
-      */
-    //% blockId="LedRainbow" block="set 01 LED rainbow"
+     * Shows a rainbow pattern on all LEDs.
+     * @param dir direction. Up is Red at 0 to Purple at 13
+     */
+    //% blockId="LedRainbow" block="set LED rainbow"
     //% weight=70
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRainbow(): void
+    export function ledRainbow(dir: boolean): void
     {
         i2cData2[0] = RAINBOW;		// Select Rainbow
-        i2cData2[1] = 0;		// Direction
+        i2cData2[1] = dir;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
-     * Shift LEDs forward and clear with zeros.
+     * Shift LEDs and clear with zeros.
+     * @param dir direction of shift. Up is 0 to 1
      */
     //% blockId="LedShift" block="shift LEDs"
     //% weight=60
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledShift(): void
+    export function ledShift(dir: boolean): void
     {
         i2cData2[0] = SHIFT_LEDS;	// Select Shift
-        i2cData2[1] = 0;		// Direction
+        i2cData2[1] = dir;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
-     * Rotate LEDs forward.
+     * Rotate LEDs
+     * @param dir direction of rotation. Up is 0 to 1
      */
     //% blockId="LedRotate" block="rotate LEDs"
     //% weight=50
+    //% dir.shadow="toggleUpDown"
     //% subcategory=FireLeds
     //% group=Basic
     //% blockGap=8
-    export function ledRotate(): void
+    export function ledRotate(dir: boolean): void
     {
         i2cData2[0] = ROTATE_LEDS;	// Select Rotate
-        i2cData2[1] = 0;		// Direction
+        i2cData2[1] = dir;		// Direction
         pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
@@ -657,7 +663,9 @@ namespace theta
     //% blockGap=8
     export function ledShow(): void
     {
-        pins.i2cWriteNumber(_addrATM, FIREUPDT, NumberFormat.Int8LE, false);
+        i2cData2[0] = FIREUPDT;		// Seect Immediate LED Update
+        i2cData2[1] = 0;		// dummy
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
     }
 
     /**
