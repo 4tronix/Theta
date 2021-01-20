@@ -250,6 +250,10 @@ namespace theta
 // define OUTPUT1_DATA  6
 // define INPUT0_CFG    7
 // define INPUT1_CFG    8
+// define UPDATEMODE    9
+// define SHIFT_LEDS   10
+// define ROTATE_LEDS  11
+// define RAINBOW      12
 // define RESET         20
     const _addrATM = 0x22;
     const ATMRESET = 20;
@@ -262,6 +266,10 @@ namespace theta
     const OUTDAT1  = 6;
     const INCFG0   = 7;
     const INCFG1   = 8;
+    const UPDATEMODE  = 9;
+    const SHIFT_LEDS  = 10;
+    const ROTATE_LEDS = 11;
+    const RAINBOW     = 12;
 
 // INPUT REGISTERS
 // define VERREV 0
