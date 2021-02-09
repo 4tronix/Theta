@@ -489,12 +489,13 @@ namespace theta
       * @param speed speed of motor between 0 and 100. eg: 60
       * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
       */
-    //% blockId="MotorMovems" block="move%motor|motor(s)%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% blockId="MotorMovems"
+    //% block="move%motor|motor(s)%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% inlineInputMode=inline
     //% speed.min=0 speed.max=100
     //% weight=45
     //% subcategory=Motors
     //% blockGap=8
-    //% inlineInputMode=inline
     export function motorMovems(motor: RXMotor, direction: RXDirection, speed: number, milliseconds: number): void
     {
         motorMove(motor, direction, speed);
