@@ -482,6 +482,26 @@ namespace theta
     }
 
     /**
+      * Move individual motors forward or reverse for milliseconds
+      * @param motor motor to drive
+      * @param direction Move Forward or Reverse
+      * @param speed speed of motor between 0 and 100. eg: 60
+      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      */
+    //% blockId="MotorMovems" block="move%motor|motor(s)%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% speed.min=0 speed.max=100
+    //% weight=45
+    //% subcategory=Motors
+    //% blockGap=8
+    export function motorMovems(motor: RXMotor, direction: RXDirection, speed: number, milliseconds: number): void
+    {
+        motorMove(motor, direction, speed);
+        basic.pause(milliseconds);
+        robotStop(RXStopMode.Coast);
+    }
+
+
+    /**
       * Set left/right bias to match motors
       * @param direction direction to turn more (if robot goes right, set this to left)
       * @param bias percentage of speed to bias with eg: 10
