@@ -222,7 +222,7 @@ namespace theta
     let mouthStraight: number[] = [0,5,10,11,12,13];
     let mouthOooh: number[] = [1,2,3,4,6,7,8,9,10,13];
     let mouthEeeh: number[] = [0,1,2,3,4,5,6,7,8,9];
-    let palette: number[] = ["#FF0000","#659900","#18E600","#80FF00","#00FF00","#FF8000","#D82600","#B24C00","#00FFC0","#00FF80","#FFC000","#FF0080","#FF00FF","#B09EFF","#00FFFF","#FFFF00","#8000FF","#0080FF","#0000FF","#FFFFFF","#FF8080","#80FF80","#40C0FF","#999999","#000000"];
+    let palette: number[] = [0xFF0000, 0x659900, 0x18E600, 0x80FF00, 0x00FF00, 0xFF8000, 0xD82600, 0xB24C00, 0x00FFC0, 0x00FF80, 0xFFC000, 0xFF0080, 0xFF00FF, 0xB09EFF, 0x00FFFF, 0xFFFF00, 0x8000FF, 0x0080FF, 0x0000FF, 0xFFFFFF, 0xFF8080, 0x80FF80, 0x40C0FF, 0x999999, 0x000000];
     let oled: firescreen.Screen;
     let leftBias = 0;
     let rightBias = 0;
