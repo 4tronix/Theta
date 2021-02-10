@@ -487,19 +487,20 @@ namespace theta
       * @param motor motor to drive
       * @param direction Move Forward or Reverse
       * @param speed speed of motor between 0 and 100. eg: 60
-      * @param milliseconds duration in milliseconds to drive forward for, then stop. eg: 400
+      * @param duration duration in milliseconds to drive forward for, then stop. eg: 400
       */
     //% blockId="MotorMovems"
-    //% block="move%motor|motor(s)%direction|at speed%speed|\\% for%milliseconds|ms"
+    //% block="move%motor|motor(s)%direction|at speed%speed|for%duration|ms"
     //% inlineInputMode=inline
+    //% duration.shadow=timePicker
     //% speed.min=0 speed.max=100
     //% weight=45
     //% subcategory=Motors
     //% blockGap=8
-    export function motorMovems(motor: RXMotor, direction: RXDirection, speed: number, milliseconds: number): void
+    export function motorMovems(motor: RXMotor, direction: RXDirection, speed: number, duration: number): void
     {
         motorMove(motor, direction, speed);
-        basic.pause(milliseconds);
+        basic.pause(duration);
         robotStop(RXStopMode.Coast);
     }
 
