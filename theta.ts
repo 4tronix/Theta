@@ -204,6 +204,26 @@ enum RXColors
 }
 
 /**
+ * ATMega I/O Pins Modes
+ */
+enum RXIOMode
+{
+    //% block="digital input"
+    DigitalIn=0,
+    //% block="input with pullup"
+    InputPullup=1,
+    //% block="digital output"
+    DigitalOut=2,
+    //% block="pwm output"
+    PWMOUT=3,
+    //% block="servo output"
+    Servo=4
+}
+
+
+
+
+/**
  * Custom blocks
  */
 //% weight=50 color=#e7660b icon="\uf139"
@@ -242,55 +262,66 @@ namespace theta
 // ATMega definitions
 
 // OUTPUT REGISTERS
-// define FIRELED_DATA  0
-// define SET_BRIGHT    1
-// define UPDATE_NOW    2
-// define OUTPUT0_CFG   3
-// define OUTPUT1_CFG   4
-// define OUTPUT0_DATA  5
-// define OUTPUT1_DATA  6
-// define INPUT0_CFG    7
-// define INPUT1_CFG    8
-// define UPDATEMODE    9
-// define SHIFT_LEDS   10
-// define ROTATE_LEDS  11
-// define RAINBOW      12
-// define RESET         20
+// #define FIRELED_DATA  0
+// #define SET_BRIGHT    1
+// #define UPDATE_NOW    2
+// #define IO_0_CFG      3
+// #define IO_1_CFG      4
+// #define IO_2_CFG      5
+// #define IO_3_CFG      6
+// #define DUMMY_0       7
+// #define DUMMY_1       8
+// #define UPDATEMODE    9
+// #define SHIFT_LEDS   10
+// #define ROTATE_LEDS  11
+// #define RAINBOW      12
+// #define IO_0_DATA    13
+// #define IO_1_DATA    14
+// #define IO_2_DATA    15
+// #define IO_3_DATA    16
+// #define RESET        20
     const _addrATM = 0x22;
     const ATMRESET = 20;
     const FIREDATA = 0;
     const FIREBRT  = 1;
     const FIREUPDT = 2;
-    const OUTCFG0  = 3;
-    const OUTCFG1  = 4;
-    const OUTDAT0  = 5;
-    const OUTDAT1  = 6;
-    const INCFG0   = 7;
-    const INCFG1   = 8;
+    const IO_0_CFG  = 3;
+    const IO_1_CFG  = 4;
+    const IO_2_CFG  = 5;
+    const IO_3_CFG  = 6;
     const UPDATEMODE  = 9;
     const SHIFT_LEDS  = 10;
     const ROTATE_LEDS = 11;
     const RAINBOW     = 12;
+    const IO_0_DATA = 13;
+    const IO_1_DATA = 14;
+    const IO_2_DATA = 15;
+    const IO_3_DATA = 16;
 
 // INPUT REGISTERS
-// define VERREV 0
-// define IN0 1
-// define IN1 2
-// define LINEL 3
-// define LINER 4
-// define LIGHTL 5
-// define LIGHTR 6
-// define DIAL 7
-// define PSU 8
+// #define VERREV   0
+// #define LINEL    1
+// #define LINER    2
+// #define LIGHTL   3
+// #define LIGHTR   4
+// #define DIAL     5
+// #define PSU      6
+// #define INP0     7
+// #define INP1     8
+// #define INP2     9
+// #define INP3    10
+// #define NTYPES  11
     const VERREV = 0;
-    const IN0 = 1;
-    const IN1 = 2;
-    const LINEL = 3
-    const LINER = 4
-    const LIGHTL = 5
-    const LIGHTR = 6
-    const DIAL = 7
-    const PSU = 8
+    const LINEL = 1
+    const LINER = 2
+    const LIGHTL = 3
+    const LIGHTR = 4
+    const DIAL = 5
+    const PSU = 6
+    const INP0 = 7
+    const INP1 = 8
+    const INP2 = 9
+    const INP3 = 10
 
 // ----------------------------------------------------------
 
@@ -746,6 +777,89 @@ namespace theta
 
 // Built-in Sensors - Inputs and Outputs
 
+// ATMEGA328 I/O Pins. 4 digital pins can be used as inputs or outputs
+    /**
+    * Set mode of ATMega IO Pins
+    * @param pin select 0 to 3
+    * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
+    */
+    //% blockId="SetIOMode" block="set 08 IO mode of pin%pin|to %mode"
+    //% weight=40
+    //% pin.minimum=0
+    //% pin.maximum=3
+    //% subcategory="Inputs & Outputs"
+    export function setIOMode(pin: number, mode: RXIOMode): void
+    {
+        let cmd = 0;
+        switch(pin)
+        {
+            case 0: cmd = IO_0_CFG; break;
+            case 1: cmd = IO_1_CFG; break;
+            case 2: cmd = IO_2_CFG; break;
+            case 3: cmd = IO_3_CFG; break;
+        }
+        i2cData2[0] = cmd;	// I2C register to set
+        i2cData2[1] = mode;	// Value
+        pins.i2cWriteBuffer(_addrATM, i2cData2);
+    }
+
+    /**
+    * Read ATMega IO Pin
+    * @param pin select 0 to 3
+    */
+    //% blockId="ReadIOPin" block="read pin%pin"
+    //% weight=30
+    //% pin.minimum=0
+    //% pin.maximum=3
+    //% subcategory="Inputs & Outputs"
+    export function readIOPin(pin: number): number
+    {
+        let cmd = 0;
+        switch(pin)
+        {
+            case 0: cmd = INP0; break;
+            case 1: cmd = INP1; break;
+            case 2: cmd = INP2; break;
+            case 3: cmd = INP3; break;
+        }
+        if (cmd != 0)
+        {
+            pins.i2cWriteNumber(_addrATM, cmd, NumberFormat.Int8LE, false);
+            return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+        }
+        else
+            return 0;
+    }
+
+    /**
+    * Write ATMega IO Pin
+    * @param value data to write to output pin
+    * @param pin select 0 to 3
+    */
+    //% blockId="WriteIOPin" block="write %value|to pin%pin"
+    //% weight=20
+    //% pin.minimum=0
+    //% pin.maximum=3
+    //% subcategory="Inputs & Outputs"
+    export function writeIOPin(value: number, pin: number): void
+    {
+        let cmd = 0;
+        switch(pin)
+        {
+            case 0: cmd = IO_0_DATA; break;
+            case 1: cmd = IO_1_DATA; break;
+            case 2: cmd = IO_2_DATA; break;
+            case 3: cmd = IO_3_DATA; break;
+        }
+        if (cmd != 0)
+        {
+            i2cData2[0] = cmd;		// I2C register to set
+            i2cData2[1] = value;	// Value
+            pins.i2cWriteBuffer(_addrATM, i2cData2);
+        }
+    }
+
+// General I/O
     /**
       * Sound a buzz.
       * @param flag state of buzzer (On or Off)
