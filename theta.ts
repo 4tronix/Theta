@@ -247,6 +247,12 @@ namespace theta
     let leftBias = 0;
     let rightBias = 0;
 
+    let startFlash = 25;
+    let calibration: number[] = [0, 0, 0];
+    let leftCalib = 0;
+    let rightCalib = 0;
+    let initCalib = false;
+
     const lMotorD0 = DigitalPin.P14;
     const lMotorD1 = DigitalPin.P13;
     const lMotorA0 = AnalogPin.P14;
@@ -468,6 +474,26 @@ namespace theta
         pins.digitalWritePin(rMotorD1, stopMode);
     }
 
+    function createCalib(speed: number): void
+    {
+        if (! initCalib)
+        {
+            loadCalibration();
+            initCalib = true;
+        }
+        let calibVal = 0;
+        if (speed < 60)
+            calibVal = calibration[1] - ((60 - speed)/30) * (calibration[1] - calibration[0]);
+        else
+            calibVal = calibration[2] - ((90 - speed)/30) * (calibration[2] - calibration[1]);
+        leftCalib = 0;
+        rightCalib = 0;
+        if (calibVal < 0)
+            leftCalib = Math.abs(calibVal);
+        else
+            rightCalib = calibVal;
+    }
+
     /**
       * Move individual motors forward or reverse
       * @param motor motor to drive
@@ -481,10 +507,23 @@ namespace theta
     //% blockGap=8
     export function motorMove(motor: RXMotor, direction: RXDirection, speed: number): void
     {
-        speed = clamp(speed, 0, 100) * 10.23;
+        let lSpeed = 0;
+        let rSpeed = 0;
+        speed = clamp(speed, 0, 100);
+	createCalib(speed); // sets bias values for "DriveStraight"
+        speed = speed * 10.23
         setPWM(speed);
-        let lSpeed = Math.round(speed * (100 - leftBias) / 100);
-        let rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        if (leftBias == 0 && rightBias == 0)
+        {
+            lSpeed = Math.round(speed * (100 - leftCalib) / 100);
+            rSpeed = Math.round(speed * (100 - rightCalib) / 100);
+        }
+        else
+        {
+            lSpeed = Math.round(speed * (100 - leftBias) / 100);
+            rSpeed = Math.round(speed * (100 - rightBias) / 100);
+        }
+
         if ((motor == RXMotor.Left) || (motor == RXMotor.Both))
         {
             if (direction == RXDirection.Forward)
@@ -546,6 +585,7 @@ namespace theta
     //% weight=40
     //% subcategory=Motors
     //% blockGap=8
+    //% deprecated=true
     export function motorBias(direction: RXRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
@@ -788,6 +828,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function setIOMode(pin: number, mode: RXIOMode): void
     {
         let cmd = 0;
@@ -812,6 +853,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function readIOPin(pin: number): number
     {
         let cmd = 0;
@@ -841,6 +883,7 @@ namespace theta
     //% pin.minimum=0
     //% pin.maximum=3
     //% subcategory="Inputs & Outputs"
+    //% group="IO Pins"
     export function writeIOPin(value: number, pin: number): void
     {
         let cmd = 0;
@@ -868,6 +911,7 @@ namespace theta
     //% flag.shadow="toggleOnOff"
     //% weight=100
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function buzz(flag: boolean): void
     {
         let buzz = flag ? 1 : 0;
@@ -881,6 +925,7 @@ namespace theta
     //% blockId="ReadSonar" block="read sonar as%unit"
     //% weight=90
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readSonar(unit: RXPingUnit): number
     {
         // send pulse
@@ -916,6 +961,7 @@ namespace theta
     //% blockId="ReadLine" block="%sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readLine(sensor: RXLineSensor): number
     {
         let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
@@ -930,6 +976,7 @@ namespace theta
     //% blockId="ReadLight" block="%sensor|light sensor"
     //% weight=70
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readLight(sensor: RXLightSensor): number
     {
         let reg = (sensor == RXLightSensor.Left) ? LIGHTL : LIGHTR;
@@ -943,6 +990,7 @@ namespace theta
     //% blockId="ReadDial" block="dial"
     //% weight=60
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readDial(): number
     {
         pins.i2cWriteNumber(_addrATM, DIAL, NumberFormat.Int8LE, false);
@@ -955,11 +1003,107 @@ namespace theta
     //% blockId="ReadBattery" block="battery (mV)"
     //% weight=50
     //% subcategory="Inputs & Outputs"
+    //% group=Sensors
     export function readBattery(): number
     {
         pins.i2cWriteNumber(_addrATM, PSU, NumberFormat.Int8LE, false);
         return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE) - 11) * 10;
     }
+
+// EEROM Functions
+    /**
+      * Read EEROM
+      * @param location address in Flash to read
+      */
+    //% blockId="ReadEEROM"
+    //% block="read EEROM%location"
+    //% weight=15
+    //% subcategory="Inputs & Outputs"
+    //% group=EEROM
+    export function readEEROM(location: number): number
+    {
+        return rdEEROM(location + 16); // first 16 bytes reserved for DriveStraight
+    }
+
+    /**
+      * Raw Read EEROM
+      * @param location address in Flash to read
+      */
+    //% blockId="RawReadEEROM"
+    //% block="raw read EEROM%location"
+    //% deprecated=true
+    export function rdEEROM (location: number): number
+    {
+	if ((location + startFlash) < 255)
+        {
+            pins.i2cWriteNumber(_addrATM, location + startFlash, NumberFormat.UInt8LE, false);
+            return (pins.i2cReadNumber(_addrATM, NumberFormat.Int16LE));
+        }
+        else
+            return 0;
+    }
+
+    /**
+    * Write EEROM
+    * @param value data to write (0 to 255)
+    * @param location address in Flash to write
+    */
+    //% blockId="WriteEEROM"
+    //%block="write%value|to EEROM%location"
+    //% weight=10
+    //% subcategory="Inputs & Outputs"
+    //% group=EEROM
+    export function writeEEROM(value: number, location: number): void
+    {
+        wrEEROM(value, location + 16); // first 16 bytes reserved for DriveStraight
+    }
+
+    /**
+    * Raw Write EEROM
+    * @param value data to write (0 to 255)
+    * @param location address in Flash to write
+    */
+    //% blockId="RawWriteEEROM"
+    //% block="raw write%value|to EEROM%location"
+    //% deprecated=true
+    export function wrEEROM(value: number, location: number): void
+    {
+        let cmd = location + startFlash;
+        if (cmd < 255)
+        {
+            i2cData2[0] = cmd;		// I2C register to set
+            i2cData2[1] = value;	// Value
+            pins.i2cWriteBuffer(_addrATM, i2cData2);
+        }
+    }
+
+    /**
+      * Load Calibration data from EEROM
+      */
+    //% blockId="loadCalibration"
+    //% block="Load calibration from EEROM"
+    //% weight=80
+    //% deprecated=true
+    export function loadCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            calibration[i] = rdEEROM(i);
+    }
+
+    /**
+      * Save Calibration data to EEROM
+      */
+    //% blockId="saveCalibration"
+    //% block="Save calibration to EEROM"
+    //% weight=70
+    //% deprecated=true
+    export function saveCalibration(): void
+    {
+	for (let i=0; i<3; i++)
+            wrEEROM(calibration[i],i);
+    }
+
+
 
 
 // Addon Boards
