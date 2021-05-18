@@ -347,7 +347,7 @@ namespace theta
       * @param enable enable or disable Blueetoth
     */
     //% blockId="EnableBluetooth"
-    //% block="%enable|12 Bluetooth"
+    //% block="%enable|Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
     {
@@ -823,7 +823,7 @@ namespace theta
     * @param pin select 0 to 3
     * @param mode Can be one of Digital In, Digital Out, Servo or PWM Out
     */
-    //% blockId="SetIOMode" block="set 08 IO mode of pin%pin|to %mode"
+    //% blockId="SetIOMode" block="set IO mode of pin%pin|to%mode"
     //% weight=40
     //% pin.minimum=0
     //% pin.maximum=3
@@ -958,13 +958,26 @@ namespace theta
       * Read line sensor.
       * @param sensor Line sensor to read.
       */
-    //% blockId="ReadLine" block="%sensor|line sensor"
+    //% blockId="ReadLine" block="02 %sensor|line sensor"
     //% weight=80
     //% subcategory="Inputs & Outputs"
     //% group=Sensors
     export function readLine(sensor: RXLineSensor): number
     {
         let reg = (sensor == RXLineSensor.Left) ? LINEL : LINER;
+        return getI2Cval(reg);
+    }
+
+    function getI2Cval(reg: number): number
+    {
+        let rval = rawI2C(reg);
+        if (rval == 0)
+            rval = rawI2C(reg);
+        return rval;
+    }
+
+    function rawI2C(reg: number): number
+    {
         pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
         return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
     }
@@ -980,8 +993,7 @@ namespace theta
     export function readLight(sensor: RXLightSensor): number
     {
         let reg = (sensor == RXLightSensor.Left) ? LIGHTL : LIGHTR;
-        pins.i2cWriteNumber(_addrATM, reg, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+        return getI2Cval(reg);
     }
 
     /**
@@ -993,8 +1005,7 @@ namespace theta
     //% group=Sensors
     export function readDial(): number
     {
-        pins.i2cWriteNumber(_addrATM, DIAL, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE));
+        return getI2Cval(DIAL);
     }
 
     /**
@@ -1006,8 +1017,7 @@ namespace theta
     //% group=Sensors
     export function readBattery(): number
     {
-        pins.i2cWriteNumber(_addrATM, PSU, NumberFormat.Int8LE, false);
-        return (pins.i2cReadNumber(_addrATM, NumberFormat.UInt16LE) - 11) * 10;
+        return (getI2Cval(PSU) - 11) * 10;
     }
 
 // EEROM Functions
@@ -1036,8 +1046,7 @@ namespace theta
     {
 	if ((location + startFlash) < 255)
         {
-            pins.i2cWriteNumber(_addrATM, location + startFlash, NumberFormat.UInt8LE, false);
-            return (pins.i2cReadNumber(_addrATM, NumberFormat.Int16LE));
+            return getI2Cval(location + startFlash);
         }
         else
             return 0;
