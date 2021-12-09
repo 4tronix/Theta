@@ -1037,7 +1037,7 @@ namespace theta
     export function readEEROM(location: number): number
     {
         //return rdEEROM(location + 16); // first 16 bytes reserved for DriveStraight
-        return rdEEROM(location; // DriveStraight removed v1.1
+        return rdEEROM(location); // DriveStraight removed v1.1
     }
 
     /**
@@ -1091,34 +1091,6 @@ namespace theta
             pins.i2cWriteBuffer(_addrATM, i2cData2);
         }
     }
-
-/* Removed v1.1
-    /**
-      * Load Calibration data from EEROM
-      */
-    //% blockId="loadCalibration"
-    //% block="Load calibration from EEROM"
-    //% weight=80
-    //% deprecated=true
-    export function loadCalibration(): void
-    {
-	for (let i=0; i<3; i++)
-            calibration[i] = rdEEROM(i);
-    }
-
-    /**
-      * Save Calibration data to EEROM
-      */
-    //% blockId="saveCalibration"
-    //% block="Save calibration to EEROM"
-    //% weight=70
-    //% deprecated=true
-    export function saveCalibration(): void
-    {
-	for (let i=0; i<3; i++)
-            wrEEROM(calibration[i],i);
-    }
-*/
 
 
 
