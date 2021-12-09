@@ -347,7 +347,7 @@ namespace theta
       * Enable/Disable Bluetooth support by disabling/enabling FireLeds
       * @param enable enable or disable Blueetoth
     */
-    //% blockId="01 EnableBluetooth"
+    //% blockId="EnableBluetooth"
     //% block="%enable|Bluetooth"
     //% blockGap=8
     export function enableBluetooth(enable: RXBluetooth)
