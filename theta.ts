@@ -589,7 +589,6 @@ namespace theta
     //% weight=40
     //% subcategory=Motors
     //% blockGap=8
-    //% deprecated=true
     export function motorBias(direction: RXRobotDirection, bias: number): void
     {
         bias = clamp(bias, 0, 80);
