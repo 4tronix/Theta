@@ -1,7 +1,7 @@
 {
     "name": "Theta",
-    "version": "0.0.3",
-    "description": "Microsoft MakeCode package for RobotixLab Theta Robot",
+    "version": "0.1.0",
+    "description": "Microsoft MakeCode package for 4tronix/RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -10,7 +10,8 @@
     },
     "files": [
         "README.md",
-        "theta.ts"
+        "theta.ts",
+        "tests.ts"
     ],
     "testFiles": [],
     "public": true,
