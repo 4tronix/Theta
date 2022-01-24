@@ -10,10 +10,11 @@
     },
     "files": [
         "README.md",
-        "theta.ts",
+        "theta.ts"
+    ],
+    "testFiles": [
         "tests.ts"
     ],
-    "testFiles": [],
     "public": true,
     "yotta": {}
 }
