@@ -934,7 +934,7 @@ namespace theta
         // send pulse
         let trig = DigitalPin.P12;
         let echo = DigitalPin.P12;
-        let maxDistance = 2000*37; // 2m
+        let maxDistance = 2000*59; // 2m in microseconds
         let d=10;
         pins.setPull(trig, PinPullMode.PullNone);
         for (let x=0; x<10; x++)
@@ -951,8 +951,8 @@ namespace theta
         }
         switch (unit)
         {
-            case RXPingUnit.Centimeters: return Math.round(d / 37);
-            case RXPingUnit.Inches: return Math.round(d / 94);
+            case RXPingUnit.Centimeters: return Math.round(d / 59);
+            case RXPingUnit.Inches: return Math.round(d / 149);
             default: return d;
         }
     }

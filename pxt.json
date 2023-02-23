@@ -1,6 +1,6 @@
 {
     "name": "Theta",
-    "version": "0.1.0",
+    "version": "1.0.1",
     "description": "Microsoft MakeCode package for 4tronix/RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
