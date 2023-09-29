@@ -1,11 +1,11 @@
 {
     "name": "Theta",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Microsoft MakeCode package for 4tronix/RobotixLab Theta Robot",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "fireled": "github:4tronix/FireLedsBase#0.1.4",
+        "fireled": "github:4tronix/FireLedsBase#1.2.0",
         "firescreen": "github:4tronix/FireScreen#0.0.5"
     },
     "files": [
