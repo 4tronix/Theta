@@ -3,7 +3,7 @@
 This library provides a Microsoft Makecode package for [4tronix / Robotixlab Theta robot](https://4tronix.co.uk/theta)
 
 ## Driving the robot    
-The simplest way to drive the robot is by using the `go(...)` or `goms(...)` blocks.
+The simplest way to drive the robot is by using the `robotGo(...)` or `robotGoms(...)` blocks.
 With each of these blocks you specify Forward or Reverse, and a speed from 0 to 100.
 
 Both motors will be driven at the selected speed and direction.
@@ -11,13 +11,13 @@ Both motors will be driven at the selected speed and direction.
 Move forward at speed 60 forever:
 
 ```block
-theta.go(RXDirection.Forward, 60)
+theta.robotGo(RXDirection.Forward, 60)
 ```
 
 Move backward at speed 100 for 2000 ms:
 
 ```block
-theta.goms(RXDirection.Reverse, 100, 2000)
+theta.robotGoms(RXDirection.Reverse, 100, 2000)
 ```
 
 You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blocks
@@ -25,13 +25,13 @@ You can also spin/rotate the robot with the `rotate(...)` or `rotatems(...)` blo
 Rotate left at speed 70:
 
 ```block
-theta.rotate(RXRobotDirection.Left, 70)
+theta.robotRotate(RXRobotDirection.Left, 70)
 ```
 
 Rotate right at speed 50 for 400ms:
 
 ```block
-theta.rotatems(RXRobotDirection.Right, 50, 400)
+theta.robotRotatems(RXRobotDirection.Right, 50, 400)
 ```   
 
 ## Stopping
@@ -41,38 +41,38 @@ This helps when aiming for more accurate manoeuvres. Use the `stop(...)` command
 Slowly coast to a stop:
 
 ```block
-theta.stop(RXStopMode.Coast)
+theta.robotStop(RXStopMode.Coast)
 ```
 
 Stop rapidly with braking:
 
 ```block
-theta.stop(RXStopMode.Brake)
+theta.robotStop(RXStopMode.Brake)
 ```
 
 ## Driving the motors individually
 
-If you want more fine grain control of individal motors, use the `move(...)` blobk to drive each motor separately, either forward or reverse.
+If you want more fine grain control of individal motors, use the `motorMove(...)` block to drive each motor separately, either forward or reverse.
 You can specify the direction (Forward or Reverse) and speed between 0 and 100.
 If the left motor turns slower than the right motor, the robot will turn to the left
 
-Drive both motors forward at speed 60. Equivalent to theta.go(RXDirection.Forward, 60):
+Drive both motors forward at speed 60. Equivalent to theta.motorGo(RXDirection.Forward, 60):
 
 ```block
-theta.move(RXMotor.Both, RXDirection.Forward, 60)
+theta.motorMove(RXMotor.Both, RXDirection.Forward, 60)
 ```
 
 Drive left motor in reverse at speed 30:
 
 ```block
-theta.move(RXMotor.Left, RXDirection.Reverse, 30)
+theta.motorMove(RXMotor.Left, RXDirection.Reverse, 30)
 ```
 
 Drive forward in a leftward curve:
 
 ```blocks
-theta.move(RXMotor.Left, RXDirection.Forward, 40)
-theta.move(RXMotor.Right, RXDirection.Forward, 70)
+theta.motorMove(RXMotor.Left, RXDirection.Forward, 40)
+theta.motorMove(RXMotor.Right, RXDirection.Forward, 70)
 ```
 
 ## Making the Robot Drive Straight
@@ -89,24 +89,24 @@ change of course over about 2m (6 feet).
 If robot leaves straight line to the right by about 10cm over 2m, bias it to the left by 5%:
 
 ```block
-theta.MotorBias(RXRobotDirection.Left, 5)
+theta.motorBias(RXRobotDirection.Left, 5)
 ```
 
 If robot leaves straight line to left by 25cm, bias it to the right by 15%:
 
 ```block
-theta.MotorBias(RXRobotDirection.Right, 15)
+theta.motorBias(RXRobotDirection.Right, 15)
 ```
 
 ## Read sonar value
 
 If you have mounted the optional sonar sensor for the theta you can
-also use the `sonar(..)` function to read the distance to obstacles.
+also use the `readSonar(..)` function to read the distance to obstacles.
 
 ```blocks
-let distance_us = theta.sonar(RXPingUnit.MicroSeconds)
-let distance_cm = theta.sonar(RXPingUnit.Centimeters)
-let distance_in = theta.sonar(RXPingUnit.Inches)
+let distance_us = theta.readSonar(RXPingUnit.MicroSeconds)
+let distance_cm = theta.readSonar(RXPingUnit.Centimeters)
+let distance_in = theta.readSonar(RXPingUnit.Inches)
 ```
 
 ## FireLed Functions
@@ -118,8 +118,8 @@ However, it can slow down some effects so there is a block provided to switch th
 Set all FireLeds to Green (hard-coded RGB color or built-in colour selection - look at Javascript to see the difference):
 
 ```blocks
-theta.setLedColor(0x00FF00)
-theta.setLedColor(RXColors.Green)
+theta.ledsColor(0x00FF00)
+theta.ledsColor(RXColors.Green)
 ```
 
 Clear all Fireleds:
@@ -131,7 +131,7 @@ theta.ledClear()
 Set the FireLed at position 0 to 13 to selected colour. eg. set Fireled 3 to Red:
 
 ```block
-theta.setPixelColor(3, 0xff0000)
+theta.setPixel(3, 0xff0000)
 ```
 
 Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple):
@@ -164,9 +164,10 @@ theta.setUpdateMode(RXMode.Manual)
 theta.setUpdateMode(RXMode.Auto)
 ```
 
-// Select colour from separate Red, Green and Blue values
-// Each of the Red, Green and Blue values can range from 0 to 255
-// This example produces a pale blue colour
+Select colour from separate Red, Green and Blue values.
+Each of the Red, Green and Blue values can range from 0 to 255.
+
+This example produces a pale blue colour:
 
 ```block
 let myColour = theta.convertRGB(50, 100, 200)
