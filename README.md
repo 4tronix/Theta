@@ -134,22 +134,22 @@ Set the FireLed at position 0 to 13 to selected colour. eg. set Fireled 3 to Red
 theta.setPixel(3, 0xff0000)
 ```
 
-Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple):
+Set all the FireLeds to Rainbow (uses the colour wheel from Red to Purple). Choose true or false to start at the beginning or the end:
 
 ```block
-theta.ledRainbow()
+theta.ledRainbow(true)
 ```
 
-Shift FireLeds up one place, blanking the first FireLed:
+Shift FireLeds up/down one place, blanking the first/last FireLed:
 
 ```block
-theta.ledShift()
+theta.ledShift(false)
 ```
 
-Rotate FireLeds by shifting up one and replace the first with the last:
+Rotate FireLeds by shifting up/down one and replace the first/last with the last/first:
 
 ```block
-theta.ledRotate()
+theta.ledRotate(true)
 ```
 
 There are some more advanced blocks that allow you to select colours using separate RGB values
